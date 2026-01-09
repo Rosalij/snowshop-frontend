@@ -1,3 +1,4 @@
+import CategoriesView from '@/views/categoriesView.vue'
 import LoginView from '@/views/loginView.vue'
 import ProductsView from '@/views/productsView.vue'
 import ProfileView from '@/views/profileView.vue'
@@ -20,6 +21,11 @@ const router = createRouter({
     path: "/products",
     name: "products",
     component: ProductsView
+  },
+    {
+    path: "/categories",
+    name: "categories",
+    component: CategoriesView
   },
   {
     path: "/login",
