@@ -6,6 +6,13 @@
             <label for="searchQuery">Search:</label>
             <input v-model="searchQuery" type="text" class="form-control"
                 placeholder="Search products by name, description or color..." />
+
+            <label for="categoryFilter">Category:</label>
+            <select v-model="categoryFilter" class="form-select">
+                <option value="">All Categories</option>
+                <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+            </select>
+
             <!-- Add Product Button -->
             <button class="btn btn-primary col-2" @click="showAddModal = true">Add new product</button>
         </div>
@@ -31,6 +38,13 @@ const products = ref([])
 const selectedProduct = ref(null)
 const searchQuery = ref('')
 const showAddModal = ref(false)
+const categoryFilter = ref('')
+const categories = ref([])
+
+// Category filter
+if (categoryFilter.value) {
+    filtered = filtered.filter(p => p.category === categoryFilter.value)
+}
 
 // Computed property for filtering products
 const filteredProducts = computed(() => {
@@ -43,19 +57,22 @@ const filteredProducts = computed(() => {
 })
 
 
-// Fetch products
 async function getProducts() {
     try {
         const res = await fetch('https://snowshopbackend.onrender.com/products', {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (res.ok) products.value = await res.json()
-        else console.error('Failed to fetch products')
+        if (res.ok) {
+            products.value = await res.json()
+            // extract unique categories
+            categories.value = [...new Set(products.value.map(p => p.category).filter(Boolean))]
+        } else console.error('Failed to fetch products')
     } catch (err) {
         console.error(err)
     }
 }
+
 // Initial fetch on mount
 onMounted(getProducts)
 
