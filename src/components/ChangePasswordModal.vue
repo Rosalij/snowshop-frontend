@@ -1,18 +1,24 @@
 <template>
-    <div class="modal fade show d-block" tabindex="-1" v-if="show">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-backdrop fade show" @click="close"></div>
+
+    <div class="modal d-block fade show" tabindex="-1">
+        <div class="modal-dialog" @click.stop>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Change Password</h5>
-                    <button type="button" class="btn-close" @click="$emit('close')"></button>
+                    <button type="button" class="btn-close" @click="close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="password" v-model="newPassword" class="form-control"
-                        placeholder="Enter new password" />
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" @click="$emit('close')">Cancel</button>
-                    <button class="btn btn-primary" @click="savePassword">Save</button>
+                    <form @submit.prevent="submit">
+                        <div class="mb-2">
+                            <label>New Password</label>
+                            <input type="password" v-model="password" class="form-control" required />
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success w-100">Change Password</button>
+                            <button type="button" class="btn btn-secondary w-100" @click="close">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -22,20 +28,16 @@
 <script setup>
 import { ref } from 'vue'
 
-const props = defineProps({
-    show: Boolean
-})
+const emit = defineEmits(['close', 'change'])
 
-const newPassword = ref('')
+const password = ref('')
 
-const savePassword = () => {
-    if (!newPassword.value) {
-        alert("Please enter a new password")
-        return
-    }
+function submit() {
+    emit('change', { password: password.value })
+    password.value = '' // reset
+}
 
-    $emit('save', newPassword.value) // send new password to parent
-    newPassword.value = ''
-    $emit('close') // close modal
+function close() {
+    emit('close')
 }
 </script>
