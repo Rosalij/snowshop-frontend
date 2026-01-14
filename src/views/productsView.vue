@@ -10,7 +10,7 @@
             <label for="categoryFilter">Category:</label>
             <select v-model="categoryFilter" class="form-select">
                 <option value="">All Categories</option>
-                <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+                <option v-for="cat in categories" :key="cat._id" :value="cat.name">{{ cat.name }}</option>
             </select>
 
             <!-- Add Product Button -->
@@ -19,10 +19,12 @@
         <!-- Products Table -->
         <ProductsTable :products="filteredProducts" @editProduct="openEditModal" @deleteProduct="deleteProduct" />
         <!-- Edit Product Modal -->
-        <EditProductModal v-if="selectedProduct" :product="selectedProduct" @save="updateProduct"
-            @delete="deleteProduct" @close="selectedProduct = null" />
+        <EditProductModal v-if="selectedProduct" :product="selectedProduct" :categories="categories"
+            @save="updateProduct" @delete="deleteProduct" @close="selectedProduct = null" />
         <!-- Add Product Modal -->
-        <AddProductModal v-if="showAddModal" @save="addProduct" @close="showAddModal = false" />
+        <AddProductModal v-if="showAddModal" :categories="categories" @save="addProduct"
+            @close="showAddModal = false" />
+
     </div>
 </template>
 
@@ -38,22 +40,38 @@ const products = ref([])
 const selectedProduct = ref(null)
 const searchQuery = ref('')
 const showAddModal = ref(false)
+
 const categoryFilter = ref('')
-const categories = ref([])
 
-// Category filter
 if (categoryFilter.value) {
-    filtered = filtered.filter(p => p.category === categoryFilter.value)
+    filtered = filtered.filter(p => p.category?.name === categoryFilter.value)
 }
-
-// Computed property for filtering products
+const categories = computed(() => {
+    // get unique categories as objects {_id, name}
+    const map = new Map()
+    products.value.forEach(p => {
+        if (p.category?._id) map.set(p.category._id, p.category)
+    })
+    return Array.from(map.values())
+})
 const filteredProducts = computed(() => {
-    if (!searchQuery.value) return products.value
-    return products.value.filter(p =>
-        p.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        (p.description && p.description.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
-        (p.color && p.color.toLowerCase().includes(searchQuery.value.toLowerCase()))
-    )
+    let filtered = products.value
+
+    // search filter
+    if (searchQuery.value) {
+        filtered = filtered.filter(p =>
+            p.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            (p.description && p.description.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+            (p.color && p.color.toLowerCase().includes(searchQuery.value.toLowerCase()))
+        )
+    }
+
+    // category filter (by name)
+    if (categoryFilter.value) {
+        filtered = filtered.filter(p => p.category?.name === categoryFilter.value)
+    }
+
+    return filtered
 })
 
 
@@ -66,7 +84,7 @@ async function getProducts() {
         if (res.ok) {
             products.value = await res.json()
             // extract unique categories
-            categories.value = [...new Set(products.value.map(p => p.category).filter(Boolean))]
+
         } else console.error('Failed to fetch products')
     } catch (err) {
         console.error(err)
@@ -80,33 +98,26 @@ onMounted(getProducts)
 function openEditModal(product) { // Open modal with selected product
     selectedProduct.value = { ...product }
 } async function updateProduct(updatedProduct) {
-    try { // Send update request
+    try {
         const res = await fetch(`https://snowshopbackend.onrender.com/products/${updatedProduct._id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}` // Updated to get token directly
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(updatedProduct)
-        });
-
-        const data = await res.json();
-
+        })
+        const data = await res.json()
         if (res.ok) {
-            // Replace the product in the local list
-            const index = products.value.findIndex(p => p._id === data.product._id);
-            if (index !== -1) products.value[index] = data.product;
-
-            selectedProduct.value = null; // close modal
-        } else {
-            console.error('Failed to update product:', data.error);
-        }
-
+            const index = products.value.findIndex(p => p._id === data.product._id)
+            if (index !== -1) products.value[index] = data.product
+            selectedProduct.value = null
+            await getProducts() // refresh list
+        } else console.error('Failed to update product:', data.error)
     } catch (err) {
-        console.error('Error updating product:', err);
+        console.error(err)
     }
 }
-
 
 // DELETE product
 async function deleteProduct(id) {
@@ -126,14 +137,28 @@ async function deleteProduct(id) {
 }
 
 // Add product 
-async function addProduct(newProduct) { // Send add request
-    await fetch('https://snowshopbackend.onrender.com/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, // use token variable
-        body: JSON.stringify(newProduct)
-    })
-    showAddModal.value = false // close modal
-    getProducts() // refresh list
+async function addProduct(newProduct) {
+    try {
+        const res = await fetch('https://snowshopbackend.onrender.com/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(newProduct)
+        })
+
+        if (!res.ok) {
+            const err = await res.json()
+            console.error('Failed to add product:', err)
+            return
+        }
+
+        showAddModal.value = false
+        await getProducts() // refresh list
+    } catch (err) {
+        console.error('Error adding product:', err)
+    }
 }
 
 

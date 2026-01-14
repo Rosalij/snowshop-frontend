@@ -34,6 +34,17 @@
                             <input type="number" min="0" v-model.number="editProduct.stock" class="form-control"
                                 required />
                         </div>
+                        <!-- Category dropdown -->
+                        <div class="mb-2">
+                            <label class="form-label">Category</label>
+                            <!-- AddProductModal.vue -->
+                            <select v-model="editProduct.category" class="form-control" required>
+                                <option disabled value="">Select Category</option>
+                                <option v-for="cat in props.categories" :key="cat._id" :value="cat._id">{{ cat.name }}
+                                </option>
+                            </select>
+
+                        </div>
 
                         <div class="d-flex gap-2 mb-3">
                             <!-- Color Dropdown -->
@@ -82,7 +93,8 @@
 import { reactive, watch, ref, nextTick } from 'vue'
 // Props and emits
 const props = defineProps({
-    product: { type: Object, required: true }
+    product: { type: Object, required: true },
+    categories: { type: Array, required: true }
 })
 const emit = defineEmits(['save', 'delete', 'close'])
 // Reactive copy of product to edit
@@ -101,9 +113,9 @@ const nameInput = ref(null)
 
 // Save edited product
 function save() {
-    // Use _id if using MongoDB
-    emit('save', { ...editProduct, id: editProduct.id || editProduct._id })
-    alert("Product updated: " + editProduct.name)
+    // Send only the _id for category
+    const payload = { ...editProduct, category: editProduct.category }
+    emit('save', payload)
 }
 
 // Delete product
@@ -121,7 +133,6 @@ function close() {
 </script>
 
 <style scoped>
-/* Center modal vertically and limit width */
 .modal-dialog {
     top: 20%;
     transform: translateY(-50%);

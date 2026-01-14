@@ -11,6 +11,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Price</th>
+                        <th>Category</th>
                         <th>Description</th>
                         <th>Stock</th>
                         <th>Color</th>
@@ -24,6 +25,7 @@
                     <tr v-for="product in products" :key="product.id">
                         <td><strong>{{ product.name }}</strong></td>
                         <td class="text-success">${{ product.price }}</td>
+                        <td>{{ product.category?.name }}</td>
                         <td>{{ product.description }}</td>
                         <td>{{ product.stock }}</td>
                         <td>{{ product.color }}</td>

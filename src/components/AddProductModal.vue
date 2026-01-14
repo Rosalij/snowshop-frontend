@@ -3,9 +3,10 @@
     <div class="modal-backdrop fade show" @click="close"></div>
 
     <!-- Modal -->
-    <div class="modal d-block fade show" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal d-block fade show" tabindex="-1">
         <div class="modal-dialog" @click.stop>
             <div class="modal-content">
+
                 <!-- Header -->
                 <div class="modal-header">
                     <h5 class="modal-title">Add New Product</h5>
@@ -15,6 +16,7 @@
                 <!-- Body -->
                 <div class="modal-body">
                     <form @submit.prevent="save">
+
                         <div class="mb-2">
                             <label class="form-label">Name</label>
                             <input v-model="newProduct.name" class="form-control" required />
@@ -37,6 +39,21 @@
                                 required />
                         </div>
 
+                        <!-- Category dropdown -->
+                        <div class="mb-2">
+                            <label class="form-label">Category</label>
+                            <!-- AddProductModal.vue -->
+                            <select v-model="newProduct.category" class="form-control" required>
+                                <option disabled value="">Select Category</option>
+                                <option v-for="cat in categories" :key="cat._id" :value="cat._id">{{ cat.name }}
+                                </option>
+                            </select>
+
+
+                        </div>
+
+
+                        <!-- Color, Size, Level -->
                         <div class="d-flex gap-2 mb-3">
                             <select v-model="newProduct.color" class="form-control">
                                 <option disabled value="">Select Color</option>
@@ -54,7 +71,7 @@
                                 <option>Multi-color</option>
                             </select>
 
-                            <input type="text" v-model="newProduct.size" class="form-control" placeholder="Size">
+                            <input type="text" v-model="newProduct.size" class="form-control" placeholder="Size" />
 
                             <select v-model="newProduct.level" class="form-control">
                                 <option disabled value="">Select Level</option>
@@ -70,21 +87,26 @@
                             <button class="btn btn-success w-100" type="submit">Add Product</button>
                             <button class="btn btn-secondary w-100" type="button" @click="close">Cancel</button>
                         </div>
+
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
 </template>
 
-
 <script setup>
-
-
 import { reactive } from 'vue'
+
+// Props
+defineProps({
+    categories: Array
+})
+
+
 const emit = defineEmits(['save', 'close'])
 
-// New product data
 const newProduct = reactive({
     name: '',
     price: 0,
@@ -92,17 +114,15 @@ const newProduct = reactive({
     stock: 0,
     color: '',
     size: '',
-    level: ''
+    level: '',
+    category: ''
 })
 
-// Save new product
 function save() {
     emit('save', { ...newProduct })
-    // Reset form
-    Object.keys(newProduct).forEach(key => newProduct[key] = key === 'price' || key === 'stock' ? 0 : '')
+    Object.keys(newProduct).forEach(key => newProduct[key] = (key === 'price' || key === 'stock') ? 0 : '')
 }
 
-// Close modal
 function close() {
     emit('close')
 }

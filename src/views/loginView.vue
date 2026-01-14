@@ -36,39 +36,37 @@
     </div>
 </template>
 
+
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
-// Form fields and error message
 const email = ref('')
 const password = ref('')
 const error = ref('')
 const router = useRouter()
+const auth = useAuthStore()
 
-
-// Handle login submission
 async function handleLogin() {
     error.value = ''
 
-    try { // Send login request
+    try {
         const res = await fetch('https://snowshopbackend.onrender.com/users/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email.value, password: password.value })
-        });
+        })
 
         const data = await res.json()
 
-
         if (res.ok) {
-            // Save token/session
-            localStorage.setItem('token', data.token)
-            // Redirect to products page
+            auth.login(data.user, data.token)
             router.push('/products')
+
         } else {
             error.value = data.message || 'Invalid email or password'
-        } // Catch network/server errors
+        }
     } catch (err) {
         console.error(err)
         error.value = 'Server error, please try again later'
