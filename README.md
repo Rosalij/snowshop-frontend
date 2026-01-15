@@ -1,44 +1,69 @@
-# snowshop
+# SnowShop AB – Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+A responsive **Vue 3** frontend SPA application for **SnowShop AB**, an admin interface used to manage products, stock amount, categories, and user accounts.
 
-## Recommended IDE Setup
+This frontend consumes a REST API backend and provides authentication, log in and CRUD functionality.
+All of the CSS is made using Bootstrap Framework.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+---
 
-## Recommended Browser Setup
+## 🚀 Features
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+* 🔐 Authentication (login & logout)
+* 👤 User profile page
+* 🔑 Change password
+* 👥 actions (add & delete users)
+* 📦 Product management (add, edit, delete)
+* 🏷 Category filtering
+* 🔍 Search products
+* 📱 Fully responsive (desktop & mobile)
+* 🧭 Vue Router navigation
+* 📌 Persistent login using JWT
 
-## Customize configuration
+---
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## 🛠 Tech Stack
 
-## Project Setup
+* **Vue 3** (Composition API)
+* **Pinia** – state management
+* **Vue Router** – routing
+* **Bootstrap 5** – layout & responsiveness
+* **Fetch API** – HTTP requests
 
-```sh
+---
+
+
+---
+
+## 🔐 Authentication Flow
+
+* User logs in via `/users/login`
+* Backend returns a **JWT token** and user object
+* Token is stored in `localStorage`
+* Auth state is managed using **Pinia**
+* Protected routes require login
+
+---
+
+
+
+## 📦 API Integration
+
+The frontend communicates with the backend using these endpoints:
+
+* `POST /users/login`
+* `GET /products`
+* `POST /products`
+* `PATCH /products/:id`
+* `DELETE /products/:id`
+* `GET /categories`
+* `PATCH /users/:id` (change password)
+
+
+## ⚙️ Setup & Run Locally
+
+
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
 
-### Compile and Minify for Production
 
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
