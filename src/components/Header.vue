@@ -1,25 +1,39 @@
 <template>
-    <header class="d-flex m-3">
-        <RouterLink to="/products" class="text-decoration-none text-dark d-flex align-items-center gap-3">
-            <p class="display-6">SnowShop AB</p>
-        </RouterLink>
+    <header class="container my-2">
 
-        <div class="ms-auto" v-if="isLoggedIn">
-            <nav class="nav">
-                <ul class="nav nav-pills">
-                    <li class="nav-item">
-                        <RouterLink class="nav-link" to="/products">Products</RouterLink>
-                    </li>
-                    <li class="nav-item">
-                        <RouterLink class="nav-link" to="/profile">Profile</RouterLink>
-                    </li>
-                    <li class="nav-item">
-                        <button class="btn btn-outline-danger" @click="logout">Logout</button>
-                    </li>
-                </ul>
-            </nav>
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+
+            <div class="col-5">
+                <RouterLink to="/products" class="text-decoration-none  text-dark d-flex align-items-center gap-2">
+                    <img src="/public/images/black-winter-snowflake-doodle-style.png" alt="snowflake logo" width="50" />
+                    <p class="mb-0 fs-6 fs-md-4 w-100">SnowShop AB</p>
+                </RouterLink>
+            </div>
+
+
+            <!-- Menu -->
+            <div v-if="isLoggedIn">
+                <nav>
+                    <ul
+                        class="nav nav-pills justify-content-center justify-content-md-end flex-row flex-md-row gap-2 gap-md-3 mb-0">
+
+                        <li class="nav-item">
+                            <RouterLink active-class="active" class="nav-link py-1 px-2 py-md-2 px-md-3" to="/products">
+                                Products</RouterLink>
+                        </li>
+                        <li class="nav-item">
+                            <RouterLink active-class="active" class="nav-link py-1 px-2 py-md-2 px-md-3" to="/profile">
+                                Profile</RouterLink>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-outline-danger py-1 px-2 py-md-2 px-md-3"
+                                @click="logout">Logout</button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
         </div>
-
     </header>
 </template>
 

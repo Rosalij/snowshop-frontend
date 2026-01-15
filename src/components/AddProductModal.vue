@@ -18,33 +18,34 @@
                     <form @submit.prevent="save">
 
                         <div class="mb-2">
-                            <label class="form-label">Name</label>
-                            <input v-model="newProduct.name" class="form-control" required />
+                            <label class="form-label">Name:</label>
+                            <input v-model="newProduct.name" class="form-control bg-light" required />
                         </div>
 
                         <div class="mb-2">
-                            <label class="form-label">Price</label>
-                            <input type="number" min="0" v-model.number="newProduct.price" class="form-control"
+                            <label class="form-label">Price:</label>
+                            <input type="number" min="0" v-model.number="newProduct.price" class="form-control bg-light"
                                 required />
                         </div>
 
                         <div class="mb-2">
-                            <label class="form-label">Description</label>
-                            <textarea v-model="newProduct.description" class="form-control" required></textarea>
+                            <label class="form-label">Description:</label>
+                            <textarea v-model="newProduct.description" class="form-control bg-light"
+                                required></textarea>
                         </div>
 
                         <div class="mb-2">
-                            <label class="form-label">Stock</label>
-                            <input type="number" min="0" v-model.number="newProduct.stock" class="form-control"
+                            <label class="form-label">Stock:</label>
+                            <input type="number" min="0" v-model.number="newProduct.stock" class="form-control bg-light"
                                 required />
                         </div>
 
                         <!-- Category dropdown -->
                         <div class="mb-2">
-                            <label class="form-label">Category</label>
+                            <label class="form-label">Category:</label>
                             <!-- AddProductModal.vue -->
-                            <select v-model="newProduct.category" class="form-control" required>
-                                <option disabled value="">Select Category</option>
+                            <select v-model="newProduct.category" class="form-control bg-light" required>
+                                <option disabled value="">Select Category:</option>
                                 <option v-for="cat in categories" :key="cat._id" :value="cat._id">{{ cat.name }}
                                 </option>
                             </select>
@@ -55,7 +56,7 @@
 
                         <!-- Color, Size, Level -->
                         <div class="d-flex gap-2 mb-3">
-                            <select v-model="newProduct.color" class="form-control">
+                            <select v-model="newProduct.color" class="form-control bg-light">
                                 <option disabled value="">Select Color</option>
                                 <option>Red</option>
                                 <option>Blue</option>
@@ -71,9 +72,10 @@
                                 <option>Multi-color</option>
                             </select>
 
-                            <input type="text" v-model="newProduct.size" class="form-control" placeholder="Size" />
+                            <input type="text" v-model="newProduct.size" class="form-control bg-light"
+                                placeholder="Size" />
 
-                            <select v-model="newProduct.level" class="form-control">
+                            <select v-model="newProduct.level" class="form-control bg-light">
                                 <option disabled value="">Select Level</option>
                                 <option>Beginner</option>
                                 <option>Intermediate</option>

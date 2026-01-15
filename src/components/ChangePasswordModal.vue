@@ -12,7 +12,7 @@
                     <form @submit.prevent="submit">
                         <div class="mb-2">
                             <label>New Password</label>
-                            <input type="password" v-model="password" class="form-control" required />
+                            <input type="password" v-model="password" class="form-control bg-light" required />
                         </div>
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-success w-100">Change Password</button>

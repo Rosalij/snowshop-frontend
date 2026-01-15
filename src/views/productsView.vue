@@ -1,31 +1,51 @@
 <template>
     <div class="container my-4">
         <h2 class="text-center mb-4">Products</h2>
-        <!-- Search -->
-        <div class="col-10 mb-3 d-flex flex-row align-items-center gap-3 m-auto">
-            <label for="searchQuery">Search:</label>
-            <input v-model="searchQuery" type="text" class="form-control"
-                placeholder="Search products by name, description or color..." />
 
-            <label for="categoryFilter">Category:</label>
-            <select v-model="categoryFilter" class="form-select">
-                <option value="">All Categories</option>
-                <option v-for="cat in categories" :key="cat._id" :value="cat.name">{{ cat.name }}</option>
-            </select>
+        <!-- Search / Filters -->
+        <div class="row g-3 mb-4 justify-content-center">
 
-            <!-- Add Product Button -->
-            <button class="btn btn-primary col-2" @click="showAddModal = true">Add new product</button>
+            <div class="col-12 col-md-3">
+                <label class="form-label">Search</label>
+                <input v-model="searchQuery" type="text" class="form-control" placeholder="Search products..." />
+            </div>
+
+            <div class="col-12 col-md-3">
+                <label class="form-label">Category</label>
+                <select v-model="categoryFilter" class="form-select">
+                    <option value="">All Categories</option>
+                    <option v-for="cat in categories" :key="cat._id" :value="cat.name">
+                        {{ cat.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-12 col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100" @click="showAddModal = true">
+                    Add Product
+                </button>
+            </div>
+
         </div>
-        <!-- Products Table -->
-        <ProductsTable :products="filteredProducts" @editProduct="openEditModal" @deleteProduct="deleteProduct" />
-        <!-- Edit Product Modal -->
+
+        <!-- Mobile cards -->
+        <div class="d-md-none">
+            <ProductCards :products="filteredProducts" @edit="openEditModal" @delete="deleteProduct" />
+        </div>
+
+        <!-- Desktop table -->
+        <div class="d-none d-md-block">
+            <ProductsTable :products="filteredProducts" @editProduct="openEditModal" @deleteProduct="deleteProduct" />
+        </div>
+
+        <!-- Modals -->
         <EditProductModal v-if="selectedProduct" :product="selectedProduct" :categories="categories"
             @save="updateProduct" @delete="deleteProduct" @close="selectedProduct = null" />
-        <!-- Add Product Modal -->
+
         <AddProductModal v-if="showAddModal" :categories="categories" @save="addProduct"
             @close="showAddModal = false" />
-
     </div>
+
 </template>
 
 <script setup>
@@ -33,7 +53,7 @@ import { ref, onMounted, computed } from 'vue'
 import ProductsTable from '@/components/ProductItem.vue'
 import EditProductModal from '@/components/EditProductModal.vue'
 import AddProductModal from '@/components/AddProductModal.vue'
-
+import ProductCards from '@/components/ProductCards.vue'
 // State variables
 const token = localStorage.getItem('token')
 const products = ref([])
@@ -47,7 +67,7 @@ if (categoryFilter.value) {
     filtered = filtered.filter(p => p.category?.name === categoryFilter.value)
 }
 const categories = computed(() => {
-    // get unique categories as objects {_id, name}
+    // get unique categories as objects 
     const map = new Map()
     products.value.forEach(p => {
         if (p.category?._id) map.set(p.category._id, p.category)
@@ -66,7 +86,7 @@ const filteredProducts = computed(() => {
         )
     }
 
-    // category filter (by name)
+    // category filter
     if (categoryFilter.value) {
         filtered = filtered.filter(p => p.category?.name === categoryFilter.value)
     }

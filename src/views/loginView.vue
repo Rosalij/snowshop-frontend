@@ -48,6 +48,8 @@ const error = ref('')
 const router = useRouter()
 const auth = useAuthStore()
 
+
+//Log in user via database
 async function handleLogin() {
     error.value = ''
 
@@ -61,8 +63,8 @@ async function handleLogin() {
         const data = await res.json()
 
         if (res.ok) {
-            auth.login(data.user, data.token)
-            router.push('/products')
+            auth.login(data.user, data.token) //create token
+            router.push('/products') //go to products
 
         } else {
             error.value = data.message || 'Invalid email or password'

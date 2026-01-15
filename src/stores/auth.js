@@ -1,27 +1,29 @@
 import { defineStore } from 'pinia'
 
+//Get Authentication token and user
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    token: localStorage.getItem('token') || null,
-    user: null
-  }),
-  getters: {
-    isLoggedIn: (state) => !!state.token
-  },
-  actions: {
-    login(userData, token) {
-      this.token = token
-      this.user = userData      // ✅ store user data
-      localStorage.setItem('token', token)
-      console.log("User logged in:", userData)  // Debug log
+    state: () => ({
+        user: JSON.parse(localStorage.getItem('user')),
+        token: localStorage.getItem('token')
+    }),
+
+    getters: {
+        isLoggedIn: (state) => !!state.token
     },
-    logout() {
-      this.token = null
-      this.user = null
-      localStorage.removeItem('token')
-    },
-    setUser(userData) {
-      this.user = userData
+
+    actions: {
+        login(user, token) {
+            this.user = user
+            this.token = token
+            localStorage.setItem('user', JSON.stringify(user))
+            localStorage.setItem('token', token)
+        },
+
+        logout() {
+            this.user = null
+            this.token = null
+            localStorage.removeItem('user')
+            localStorage.removeItem('token')
+        }
     }
-  }
 })

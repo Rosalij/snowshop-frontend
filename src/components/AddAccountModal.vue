@@ -1,84 +1,53 @@
-<template v-if="show">
-    <!-- Modal Backdrop -->
-
-
-    <!-- Modal -->
-    <div class="modal d-block fade show" tabindex="-1">
+<template>
+    <div class="modal-backdrop fade show" @click="$emit('close')"></div>
+    <!-- Add account modal -->
+    <div class="modal d-block fade show">
         <div class="modal-dialog" @click.stop>
             <div class="modal-content">
-                <!-- Header -->
                 <div class="modal-header">
-                    <h5 class="modal-title">Register New User</h5>
-                    <button type="button" class="btn-close" @click="close"></button>
+                    <h5>Add New User</h5>
+                    <button class="btn-close" @click="$emit('close')" />
                 </div>
+                <!--form-->
+                <form @submit.prevent="submit">
+                    <div class="modal-body font-">
+                        <label class="form-label"><strong>User Details</strong></label> <br>
+                        <label form="form-username" class="form-label">Username:</label>
+                        <input v-model="form.username" class="form-control mb-2 bg-light" required />
+                        <label form="form-email" class="form-label">Email:</label>
+                        <input v-model="form.email" type="email" class="form-control mb-2 bg-light" required />
+                        <label for="form-password" class="form-label">Password:</label>
+                        <input v-model="form.password" type="password" class="form-control mb-2 bg-light" required />
+                        <label class="form-label">Role:</label>
+                        <select v-model="form.role" class="form-control bg-light">
+                            <option value="staff">Staff</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
 
-                <!-- Body -->
-                <div class="modal-body text-lg-start">
-                    <form @submit.prevent="saveUser">
-
-                        <div class="mb-2">
-                            <label class="form-label">Username:</label>
-                            <input type="text" v-model="user.username" class="form-control" required />
-                        </div>
-
-                        <div class="mb-2">
-                            <label class="form-label">Email:</label>
-                            <input type="email" v-model="user.email" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Password:</label>
-                            <input type="password" v-model="user.password" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Role:</label>
-                            <select v-model="user.role" class="form-control" required>
-                                <option disabled value="">Select Role</option>
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-primary w-100" type="submit">
-                                Register
-                            </button>
-                            <button class="btn btn-secondary w-100" type="button" @click="close">
-                                Cancel
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
-
+                    <div class="modal-footer">
+                        <button class="btn btn-success">Create</button>
+                        <button type="button" class="btn btn-secondary" @click="$emit('close')">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    <div class="modal-backdrop fade show" @click="close"></div>
 </template>
 <script setup>
 import { reactive } from 'vue'
 
-defineProps({
-    show: Boolean
-})
+const emit = defineEmits(['save', 'close'])
 
-const emit = defineEmits(['close', 'register'])
-
-const user = reactive({
+const form = reactive({
     username: '',
     email: '',
     password: '',
     role: ''
 })
 
-function saveUser() {
-    emit('register', { ...user })
-    Object.keys(user).forEach(k => user[k] = '')
-}
+function submit() {
+    emit('save', { ...form })
 
-function close() {
-    emit('close')
 }
 </script>

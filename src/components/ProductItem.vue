@@ -20,7 +20,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-
+                <!--Product item-->
                 <tbody>
                     <tr v-for="product in products" :key="product.id">
                         <td><strong>{{ product.name }}</strong></td>
@@ -32,7 +32,7 @@
                         <td>{{ product.size }}</td>
                         <td>{{ product.level }}</td>
                         <td class="col-2 m-2">
-                            <button class="btn btn-sm btn-warning me-1 m-2" @click="$emit('editProduct', product)">
+                            <button class="btn btn-sm btn-warning w-50" @click="$emit('editProduct', product)">
                                 Edit
                             </button>
 
