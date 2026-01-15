@@ -4,7 +4,8 @@ A responsive **Vue 3** frontend SPA application for **SnowShop AB**, an admin in
 
 This frontend consumes a REST API backend and provides authentication, log in and CRUD functionality.
 All of the CSS is made using Bootstrap Framework.
-
+The Backend Webservice is published at: ( https://github.com/Rosalij/snowshopbackend.git )
+which is using a mongoDB Atlas Database.
 ---
 
 ## 🚀 Features
