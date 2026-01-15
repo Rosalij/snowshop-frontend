@@ -7,7 +7,7 @@ All of the CSS is made using Bootstrap Framework.
 The Backend Webservice is published at: ( https://github.com/Rosalij/snowshopbackend.git )
 which is using a mongoDB Atlas Database.
 ---
-
+A live version is available at: ( https://snowshopadmin.netlify.app/ )
 ## 🚀 Features
 
 * 🔐 Authentication (login & logout)
